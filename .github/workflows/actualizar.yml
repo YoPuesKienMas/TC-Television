@@ -1,0 +1,24 @@
+name: Actualizar TC
+on:
+  schedule:
+    - cron: '0 */4 * * *' # Se ejecuta cada 4 horas
+  workflow_dispatch: # Permite ejecutarlo manual
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Ejecutar el Robot
+        run: python robot.py
+      - name: Guardar la nueva lista
+        run: |
+          git config --global user.name "Mi Robot"
+          git config --global user.email "robot@mitv.com"
+          git add tc.m3u
+          git commit -m "Lista actualizada" || exit 0
+          git push
