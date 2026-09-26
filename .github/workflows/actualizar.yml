@@ -18,10 +18,12 @@ jobs:
           python-version: '3.10'
       - name: Ejecutar el Robot
         run: python robot.py
+      - name: Asegurar que el archivo exista
+        run: touch tc.m3u
       - name: Guardar la nueva lista
         run: |
           git config --global user.name "Mi Robot"
           git config --global user.email "robot@mitv.com"
           git add tc.m3u
-          git commit -m "Lista actualizada" || exit 0
+          git commit -m "Lista actualizada a HD" || echo "No hay cambios nuevos, todo en orden"
           git push
