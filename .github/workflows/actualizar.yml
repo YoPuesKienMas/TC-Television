@@ -1,7 +1,7 @@
-name: Actualizar TC
+name: Actualizar TC Web HD
 on:
   schedule:
-    - cron: '0 */4 * * *'
+    - cron: '0 */3 * * *' # Se ejecutará cada 3 horas para ganar a la seguridad
   workflow_dispatch:
 
 permissions:
@@ -16,14 +16,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Ejecutar el Robot
-        run: python robot.py
-      - name: Asegurar que el archivo exista
-        run: touch tc.m3u
-      - name: Guardar la nueva lista
+      - name: Instalar el navegador invisible (Playwright)
         run: |
-          git config --global user.name "Mi Robot"
+          pip install pytest-playwright
+          playwright install chromium
+      - name: Ejecutar la intercepción
+        run: python robot.py
+      - name: Guardar la lista HD
+        run: |
+          git config --global user.name "Robot Interceptor"
           git config --global user.email "robot@mitv.com"
           git add tc.m3u
-          git commit -m "Lista actualizada a HD" || echo "No hay cambios nuevos, todo en orden"
+          git commit -m "Señal HD web actualizada" || echo "Sin cambios"
           git push
